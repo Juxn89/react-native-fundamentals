@@ -3,9 +3,10 @@ import { StyleSheet, View } from 'react-native';
 import Screen from '@/components/Screen';
 import HabitGreeting from '@/components/HabitGreeting';
 import HabitCart from '@/components/HabitCard';
+import ProfileHeader from '@/components/ProfileHeader';
 
 export default function HomeScreen() {
-	const name = 'Juan'
+	const name = 'Juan Gómez'
 	const habits: { id: number; title: string; streak: number; isCompleted: boolean; priority?: 'low' | 'medium' | 'high' }[] = [
 		{ id: 1, title: 'Drink Water', streak: 5, isCompleted: true, priority: 'high' },
 		{ id: 2, title: 'Exercise', streak: 3, isCompleted: false, priority: 'low' },
@@ -15,22 +16,21 @@ export default function HomeScreen() {
 
   return (
 		<Screen>
-			<View style={ styles.container }>
-				<HabitGreeting name={name} />
-				<View style={{ gap: 12 }}>
-					{
-						habits.map( (habit) => (
-							<HabitCart 
-								key={habit.id} 
-								title={habit.title} 
-								streak={habit.streak} 
-								isCompleted={habit.isCompleted}
-								priority={habit.priority}
-							/>
-						))
-					}
-				</View>
-			</View>			
+			<ProfileHeader name={name} role="Dev" />
+			<HabitGreeting name={name} />
+			<View style={{ gap: 12 }}>
+				{
+					habits.map( (habit) => (
+						<HabitCart 
+							key={habit.id} 
+							title={habit.title} 
+							streak={habit.streak} 
+							isCompleted={habit.isCompleted}
+							priority={habit.priority}
+						/>
+					))
+				}
+			</View>		
 		</Screen>
 
   );

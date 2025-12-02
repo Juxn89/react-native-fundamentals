@@ -1,4 +1,5 @@
 import { StyleSheet, View, Text } from "react-native"
+import { ThemedText } from "./themed-text"
 
 interface Props {
 	name?: string
@@ -11,12 +12,12 @@ export const HabitGreeting = ({ name = 'Guest' }: Props) => {
 
 	return(
 		<View style={styles.container}>
-			<Text style={styles.title}>
+			<ThemedText style={styles.title}>
 				{ `${greeting} ${name}` }
-			</Text>
-			<Text style={[styles.subtitle, { color: '#2563eb' }]}>
+			</ThemedText>
+			<ThemedText style={[styles.subtitle, { color: '#2563eb' }]}>
 				{ `Today is ${currentDate.toLocaleDateString()} - ${ currentDate.toLocaleTimeString() }` }
-			</Text>
+			</ThemedText>
 		</View>
 	)
 }

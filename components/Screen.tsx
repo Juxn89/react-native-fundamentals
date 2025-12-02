@@ -1,4 +1,5 @@
-import { StyleSheet, View } from "react-native"
+import { StyleSheet } from "react-native"
+import { ThemedView } from "./themed-view"
 
 interface Props {
 	children: React.ReactNode
@@ -6,9 +7,9 @@ interface Props {
 
 export const Screen = ({ children }: Props) => {
 	return(
-		<View style={ styles.screen }>
+		<ThemedView style={ styles.screen } lightColor="#F8FAFC" darkColor="#0B1220">
 			{children}
-		</View>
+		</ThemedView>
 	)
 }
 
@@ -17,7 +18,6 @@ export default Screen
 const styles = StyleSheet.create({
 	screen: {
 		flex: 1,
-		backgroundColor: '#f8fafc',
 		paddingHorizontal: 16,
 		paddingVertical: 20,
 		gap: 16

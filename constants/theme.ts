@@ -10,21 +10,37 @@ const tintColorDark = '#fff';
 
 export const Colors = {
   light: {
-    text: '#11181C',
-    background: '#fff',
+		text: "#0F172A",
+    background: "#F8FAFC",
+    surface: "#FFFFFF",
+    muted: "#64748B",
+    border: "#E2E8F0",
+    primary: "#2563EB",
+    onPrimary: "#FFFFFF",
+    success: "#16A34A",
+    warning: "#D97706",
+    danger: "#DC2626",
     tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
+    icon: "#64748B",
+    tabIconDefault: "#94A3B8",
     tabIconSelected: tintColorLight,
   },
-  dark: {
-    text: '#ECEDEE',
-    background: '#151718',
+	dark: {
+		text: "#E5E7EB",
+    background: "#0B1220",
+    surface: "#111827",
+    muted: "#94A3B8",
+    border: "#1F2937",
+    primary: "#60A5FA",
+    onPrimary: "#0B1220",
+    success: "#22C55E",
+    warning: "#F59E0B",
+    danger: "#F87171",
     tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
+    icon: "#9BA1A6",
+    tabIconDefault: "#9BA1A6",
     tabIconSelected: tintColorDark,
-  },
+	}
 };
 
 export const Fonts = Platform.select({

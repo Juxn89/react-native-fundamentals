@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View } from "react-native"
+import { ThemedText } from "./themed-text";
 
 interface Props {
 	title: string,
@@ -8,9 +9,9 @@ interface Props {
 }
 
 const priorityColors = {
-	low: { backgroundColor: '#ecfccb', color: '#3f6212' },
-	medium: { backgroundColor: '#fef9c3', color: '#92400e' },
-	high: { backgroundColor: '#ffe4e6', color: '#9f1239' },
+	low: { backgroundColor: '#ecfccb', color: '#3f6212', padding: 2, borderRadius: 4 },
+	medium: { backgroundColor: '#fef9c3', color: '#92400e', padding: 2, borderRadius: 4 },
+	high: { backgroundColor: '#ffe4e6', color: '#9f1239', padding: 2, borderRadius: 4 },
 }
 
 export const HabitCart = ({ title, streak, isCompleted = false, priority = 'low' }: Props) => {
@@ -20,16 +21,16 @@ export const HabitCart = ({ title, streak, isCompleted = false, priority = 'low'
 			style={[ styles.card, isCompleted && styles.completed ]}
 		>
 			<View style={styles.row}>
-				<Text style={styles.title}>
+				<ThemedText style={styles.title}>
 					{ title }
-				</Text>
-				<Text style={[ styles.badge, { backgroundColor: priorityStyle.backgroundColor, color: priorityStyle.color } ]}>
+				</ThemedText>
+				<ThemedText style={[ styles.badge, { ...priorityStyle } ]}>
 					{priority}
-				</Text>
+				</ThemedText>
 			</View>
 			<View style={styles.row}>
-			{ isCompleted && <Text style={styles.badge}>✓ Today</Text> }
-				<Text style={styles.streak}>🔥 {streak} days streak</Text>
+			{ isCompleted && <ThemedText style={styles.badge}>✓ Today</ThemedText> }
+				<ThemedText style={styles.streak}>{ `🔥 ${streak} days streak.` }</ThemedText>
 			</View>
 		</View>
 	)
@@ -56,7 +57,8 @@ const styles = StyleSheet.create({
   row: { 
 		flexDirection: 'row', 
 		justifyContent: 'space-between', 
-		alignItems: 'center' 
+		alignItems: 'center',
+		gap: 12
 	},
   title: {
 		fontSize: 16,
