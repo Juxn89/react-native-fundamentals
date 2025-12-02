@@ -1,11 +1,13 @@
-import { StyleSheet, Text, View } from "react-native"
+import { Pressable, StyleSheet, Text, View } from "react-native"
 import { ThemedText } from "./themed-text";
+import { useThemeColor } from "@/hooks/use-theme-color";
 
 interface Props {
 	title: string,
 	streak: number,
 	isCompleted: boolean,
-	priority?: 'low' | 'medium' | 'high'
+	priority?: 'low' | 'medium' | 'high',
+	onToggle?: () => void
 }
 
 const priorityColors = {
@@ -14,25 +16,38 @@ const priorityColors = {
 	high: { backgroundColor: '#ffe4e6', color: '#9f1239', padding: 2, borderRadius: 4 },
 }
 
-export const HabitCart = ({ title, streak, isCompleted = false, priority = 'low' }: Props) => {
+export const HabitCart = ({ title, streak, isCompleted = false, priority = 'low', onToggle }: Props) => {
 	const priorityStyle = priorityColors[priority];
+	const surface = useThemeColor({}, 'surface')
+	const success = useThemeColor({}, 'success')
+	const border = useThemeColor({}, 'border')
+
 	return(
-		<View
-			style={[ styles.card, isCompleted && styles.completed ]}
+		<Pressable
+			onPress={ onToggle }
+			style={ ({ pressed }) => [ styles.card, 
+				{ 
+					backgroundColor: surface, 
+					opacity: pressed ? 0.96 : 1, 
+					borderColor: isCompleted ? success : border 
+				}, 
+			]}
 		>
-			<View style={styles.row}>
-				<ThemedText style={styles.title}>
-					{ title }
-				</ThemedText>
-				<ThemedText style={[ styles.badge, { ...priorityStyle } ]}>
-					{priority}
-				</ThemedText>
-			</View>
-			<View style={styles.row}>
-			{ isCompleted && <ThemedText style={styles.badge}>✓ Today</ThemedText> }
-				<ThemedText style={styles.streak}>{ `🔥 ${streak} days streak.` }</ThemedText>
-			</View>
-		</View>
+			<View>
+				<View style={styles.row}>
+					<ThemedText style={styles.title}>
+						{ title }
+					</ThemedText>
+					<ThemedText style={[ styles.badge, { ...priorityStyle } ]}>
+						{priority}
+					</ThemedText>
+				</View>
+				<View style={styles.row}>
+				{ isCompleted && <ThemedText style={styles.badge}>✓ Today</ThemedText> }
+					<ThemedText style={styles.streak}>{ `🔥 ${streak} days streak.` }</ThemedText>
+				</View>
+			</View>			
+		</Pressable>
 	)
 }
 
@@ -62,7 +77,7 @@ const styles = StyleSheet.create({
 	},
   title: {
 		fontSize: 16,
-		color: '#0f172a', 
+		// color: '#0f172a', 
 		fontWeight: '600' 
 	},
   badge: { 

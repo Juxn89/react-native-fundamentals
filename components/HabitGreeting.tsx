@@ -13,7 +13,7 @@ export const HabitGreeting = ({ name = 'Guest' }: Props) => {
 	return(
 		<View style={styles.container}>
 			<ThemedText style={styles.title}>
-				{ `${greeting} ${name}` }
+				{ `${greeting}, ${name}!` }
 			</ThemedText>
 			<ThemedText style={[styles.subtitle, { color: '#2563eb' }]}>
 				{ `Today is ${currentDate.toLocaleDateString()} - ${ currentDate.toLocaleTimeString() }` }

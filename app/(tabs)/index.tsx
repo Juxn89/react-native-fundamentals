@@ -1,19 +1,32 @@
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import Screen from '@/components/Screen';
-import HabitGreeting from '@/components/HabitGreeting';
 import HabitCart from '@/components/HabitCard';
+import HabitGreeting from '@/components/HabitGreeting';
 import ProfileHeader from '@/components/ProfileHeader';
 
-export default function HomeScreen() {
-	const name = 'Juan Gómez'
-	const habits: { id: number; title: string; streak: number; isCompleted: boolean; priority?: 'low' | 'medium' | 'high' }[] = [
-		{ id: 1, title: 'Drink Water', streak: 5, isCompleted: true, priority: 'high' },
-		{ id: 2, title: 'Exercise', streak: 3, isCompleted: false, priority: 'low' },
-		{ id: 3, title: 'Read a Book', streak: 10, isCompleted: true, priority: 'medium' },
-		{ id: 4, title: 'Meditate', streak: 2, isCompleted: false, priority: 'high' },
-	]
+interface Habit {
+ id: number; 
+ title: string; 
+ streak: number; 
+ isCompleted: boolean; 
+ priority?: 'low' | 'medium' | 'high'
+}
 
+const INITIAL_HABITS: Habit[] = [
+	{ id: 1, title: 'Drink Water', streak: 5, isCompleted: true, priority: 'high' },
+	{ id: 2, title: 'Exercise', streak: 3, isCompleted: false, priority: 'low' },
+	{ id: 3, title: 'Read a Book', streak: 10, isCompleted: true, priority: 'medium' },
+	{ id: 4, title: 'Meditate', streak: 2, isCompleted: false, priority: 'high' },
+]
+
+export default function HomeScreen() {
+	const [habits, setHabits] = useState<Habit[]>(INITIAL_HABITS)
+	const [newHabit, setNewHabit] = useState<Habit>()
+
+	const name = 'Juan Gómez'
+	
   return (
 		<Screen>
 			<ProfileHeader name={name} role="Dev" />

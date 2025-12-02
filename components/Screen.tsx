@@ -1,13 +1,25 @@
 import { StyleSheet } from "react-native"
 import { ThemedView } from "./themed-view"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 interface Props {
 	children: React.ReactNode
 }
 
 export const Screen = ({ children }: Props) => {
+	const insets = useSafeAreaInsets()
+	
 	return(
-		<ThemedView style={ styles.screen } lightColor="#F8FAFC" darkColor="#0B1220">
+		<ThemedView 
+			style={[
+				styles.screen,
+				{
+					paddingTop: insets.top,
+					paddingBottom: insets.bottom,
+					paddingHorizontal: 16
+				}
+			]} 
+		>
 			{children}
 		</ThemedView>
 	)
