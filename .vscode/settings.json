@@ -1,4 +1,6 @@
 {
+	"explorer.autoReveal": true,
+	"explorer.compactFolders": false,
   "editor.codeActionsOnSave": {
     "source.fixAll": "explicit",
     "source.organizeImports": "explicit",
