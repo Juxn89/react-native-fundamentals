@@ -1,12 +1,12 @@
 import { useCallback, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
-import Screen from '@/components/Screen';
-import HabitCart from '@/components/HabitCard';
-import HabitGreeting from '@/components/HabitGreeting';
-import ProfileHeader from '@/components/ProfileHeader';
+import { Screen } from '@/components/Screen';
+import { HabitCart } from '@/components/HabitCard';
 import { useThemeColor } from '@/hooks/use-theme-color';
-import PrimaryButton from '@/components/PrimaryButton';
+import { HabitGreeting } from '@/components/HabitGreeting';
+import { ProfileHeader } from '@/components/ProfileHeader';
+import { PrimaryButton } from '@/components/PrimaryButton';
 
 interface Habit {
  id: number; 
