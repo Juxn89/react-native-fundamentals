@@ -1,10 +1,12 @@
-import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useCallback, useMemo, useState } from 'react';
+import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 
 import Screen from '@/components/Screen';
 import HabitCart from '@/components/HabitCard';
 import HabitGreeting from '@/components/HabitGreeting';
 import ProfileHeader from '@/components/ProfileHeader';
+import { useThemeColor } from '@/hooks/use-theme-color';
+import { ThemedText } from '@/components/themed-text';
 
 interface Habit {
  id: number; 
@@ -22,8 +24,41 @@ const INITIAL_HABITS: Habit[] = [
 ]
 
 export default function HomeScreen() {
+
+	const border = useThemeColor({}, 'border')
+	const surface = useThemeColor({ }, 'surface')
+	const primary = useThemeColor({}, 'primary')
+	const onPrimary = useThemeColor({}, 'onPrimary')
+	const text = useThemeColor({}, 'text')
+	const muted = useThemeColor({}, 'muted')
+
 	const [habits, setHabits] = useState<Habit[]>(INITIAL_HABITS)
-	const [newHabit, setNewHabit] = useState<Habit>()
+	const [newHabit, setNewHabit] = useState<string>('')
+
+	const toggle = useCallback((id: number) => {
+		setHabits(prev => prev.map(habit => {
+			if(habit.id !== id)
+				return habit
+			
+			return {
+				...habit,
+				isCompleted: !habit.isCompleted,
+				streak: !habit.isCompleted ? habit.streak + 1 : Math.max(0, habit.streak)
+			}
+		}))
+	}, [])
+
+	const addHabit = useCallback(() => {
+		const title = newHabit.trim()
+
+		if(!title)
+			return
+
+		setHabits(prev => [{ id: habits.length + 1, title, streak: 0, isCompleted: false, priority: 'low' }, ...prev])
+	}, [newHabit])
+
+	const total = habits.length
+	const totalCompleted = useMemo(() => habits.filter(habit => habit.isCompleted).length , [habits])
 
 	const name = 'Juan Gómez'
 	
@@ -31,6 +66,27 @@ export default function HomeScreen() {
 		<Screen>
 			<ProfileHeader name={name} role="Dev" />
 			<HabitGreeting name={name} />
+			<View style={[ styles.row, { alignItems: 'center' } ]}>
+				<TextInput 
+					value={ newHabit } 
+					onChangeText={ setNewHabit } 
+					placeholder='New habit (ex: Do exercise)'
+					style={[ 
+						styles.input, { 
+							backgroundColor: surface,
+							borderColor: border,
+							color: text 
+						} 
+					]}
+				/>
+				<Pressable
+					onPress={addHabit}
+					style={[ 
+						styles.addButton, { backgroundColor: primary }]}
+				>
+					<ThemedText>Add</ThemedText>
+				</Pressable>
+			</View>
 			<View style={{ gap: 12 }}>
 				{
 					habits.map( (habit) => (
@@ -40,6 +96,7 @@ export default function HomeScreen() {
 							streak={habit.streak} 
 							isCompleted={habit.isCompleted}
 							priority={habit.priority}
+							onToggle={ () => toggle(habit.id) }
 						/>
 					))
 				}
@@ -66,5 +123,23 @@ const styles = StyleSheet.create({
 	subTitle: {
 		fontSize: 14,
 		color: '#334155'
+	},
+	row: {
+		flexDirection: 'row',
+		gap: 8
+	},
+	input: {
+		flex: 1,
+		borderWidth: 1,
+		borderRadius: 12,
+		paddingHorizontal: 12,
+		paddingVertical: 10
+	},
+	addButton: {
+		paddingHorizontal: 14,
+		paddingVertical: 10,
+		borderRadius: 12,
+		alignItems: 'center',
+		justifyContent: 'center'
 	}
 });
