@@ -1,12 +1,12 @@
 import { useCallback, useMemo, useState } from 'react';
-import { Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
 import Screen from '@/components/Screen';
 import HabitCart from '@/components/HabitCard';
 import HabitGreeting from '@/components/HabitGreeting';
 import ProfileHeader from '@/components/ProfileHeader';
 import { useThemeColor } from '@/hooks/use-theme-color';
-import { ThemedText } from '@/components/themed-text';
+import PrimaryButton from '@/components/PrimaryButton';
 
 interface Habit {
  id: number; 
@@ -18,9 +18,15 @@ interface Habit {
 
 const INITIAL_HABITS: Habit[] = [
 	{ id: 1, title: 'Drink Water', streak: 5, isCompleted: true, priority: 'high' },
-	{ id: 2, title: 'Exercise', streak: 3, isCompleted: false, priority: 'low' },
-	{ id: 3, title: 'Read a Book', streak: 10, isCompleted: true, priority: 'medium' },
+	{ id: 2, title: 'Morning Jog', streak: 3, isCompleted: false, priority: 'medium' },
+	{ id: 3, title: 'Read a Book', streak: 7, isCompleted: true, priority: 'low' },
 	{ id: 4, title: 'Meditate', streak: 2, isCompleted: false, priority: 'high' },
+	{ id: 5, title: 'Write Journal', streak: 4, isCompleted: true, priority: 'medium' },
+	{ id: 6, title: 'Practice Guitar', streak: 6, isCompleted: false, priority: 'low' },
+	{ id: 7, title: 'Cook Healthy Meal', streak: 8, isCompleted: true, priority: 'high' },
+	{ id: 8, title: 'Study Spanish', streak: 1, isCompleted: false, priority: 'medium' },
+	{ id: 9, title: 'Clean Desk', streak: 3, isCompleted: true, priority: 'low' },
+	{ id: 10, title: 'Plan Tomorrow', streak: 5, isCompleted: false, priority: 'high' },
 ]
 
 export default function HomeScreen() {
@@ -79,15 +85,18 @@ export default function HomeScreen() {
 						} 
 					]}
 				/>
-				<Pressable
+				<PrimaryButton
 					onPress={addHabit}
+					title='Add'
 					style={[ 
 						styles.addButton, { backgroundColor: primary }]}
 				>
-					<ThemedText>Add</ThemedText>
-				</Pressable>
+				</PrimaryButton>
 			</View>
-			<View style={{ gap: 12 }}>
+			<ScrollView 
+				showsVerticalScrollIndicator={false}
+				contentContainerStyle={{ paddingBottom: 32, gap: 16 }}
+			>
 				{
 					habits.map( (habit) => (
 						<HabitCart 
@@ -100,7 +109,7 @@ export default function HomeScreen() {
 						/>
 					))
 				}
-			</View>		
+			</ScrollView>
 		</Screen>
 
   );
