@@ -1,8 +1,10 @@
 import { useCallback, useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { FlatList, ListRenderItemInfo, StyleSheet, TextInput, View } from 'react-native';
 
 import { Screen } from '@/components/Screen';
 import { HabitCart } from '@/components/HabitCard';
+import { ThemedText } from '@/components/themed-text';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { HabitGreeting } from '@/components/HabitGreeting';
 import { ProfileHeader } from '@/components/ProfileHeader';
@@ -37,8 +39,9 @@ export default function HomeScreen() {
 	const onPrimary = useThemeColor({}, 'onPrimary')
 	const text = useThemeColor({}, 'text')
 	const muted = useThemeColor({}, 'muted')
+	const insets = useSafeAreaInsets()
 
-	const [habits, setHabits] = useState<Habit[]>(INITIAL_HABITS)
+	const [habits, setHabits] = useState<Habit[]>([])
 	const [newHabit, setNewHabit] = useState<string>('')
 
 	const toggle = useCallback((id: number) => {
@@ -68,6 +71,27 @@ export default function HomeScreen() {
 
 	const name = 'Juan Gómez'
 	
+	const keyExtractor = useCallback((item: Habit) => item.id.toString(), [])
+	const renderItem = useCallback(({ item }: ListRenderItemInfo<Habit>) => (
+		<HabitCart 
+			key={item.id} 
+			title={item.title} 
+			streak={item.streak} 
+			isCompleted={item.isCompleted}
+			priority={item.priority}
+			onToggle={ () => toggle(item.id) }
+		/>
+	), [toggle])
+
+	const ItemSparator = () => <View style={{ height: 12 }}></View>
+	const Empty = () => (
+		<View style={{ paddingVertical: 32, alignItems: 'center', gap: '8' }}>
+			<ThemedText>
+				{ `You don't have any habits yet. Create your first one 👆🏽` }
+			</ThemedText>
+		</View>
+	)
+
   return (
 		<Screen>
 			<ProfileHeader name={name} role="Dev" />
@@ -93,23 +117,20 @@ export default function HomeScreen() {
 				>
 				</PrimaryButton>
 			</View>
-			<ScrollView 
-				showsVerticalScrollIndicator={false}
-				contentContainerStyle={{ paddingBottom: 32, gap: 16 }}
-			>
-				{
-					habits.map( (habit) => (
-						<HabitCart 
-							key={habit.id} 
-							title={habit.title} 
-							streak={habit.streak} 
-							isCompleted={habit.isCompleted}
-							priority={habit.priority}
-							onToggle={ () => toggle(habit.id) }
-						/>
-					))
-				}
-			</ScrollView>
+			<FlatList
+				data={ habits }
+				keyExtractor={ keyExtractor }
+				renderItem={ renderItem }
+				ItemSeparatorComponent={ ItemSparator }
+				ListEmptyComponent={ Empty }
+				contentContainerStyle={{
+					paddingVertical: 16,
+					paddingBottom: insets.bottom + 16
+				}}
+				initialNumToRender={ 8 }
+				windowSize={ 10 }
+				showsVerticalScrollIndicator={ false }
+			/>
 		</Screen>
 
   );
