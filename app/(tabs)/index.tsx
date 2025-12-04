@@ -9,27 +9,31 @@ import { useThemeColor } from '@/hooks/use-theme-color';
 import { HabitGreeting } from '@/components/HabitGreeting';
 import { ProfileHeader } from '@/components/ProfileHeader';
 import { PrimaryButton } from '@/components/PrimaryButton';
+import { useHabits } from '@/context/HabitsContext';
+import { Habit } from '@/types/habits';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert } from 'react-native';
 
-interface Habit {
- id: number; 
- title: string; 
- streak: number; 
- isCompleted: boolean; 
- priority?: 'low' | 'medium' | 'high'
-}
+// interface Habit {
+//  id: number; 
+//  title: string; 
+//  streak: number; 
+//  isCompleted: boolean; 
+//  priority?: 'low' | 'medium' | 'high'
+// }
 
-const INITIAL_HABITS: Habit[] = [
-	{ id: 1, title: 'Drink Water', streak: 5, isCompleted: true, priority: 'high' },
-	{ id: 2, title: 'Morning Jog', streak: 3, isCompleted: false, priority: 'medium' },
-	{ id: 3, title: 'Read a Book', streak: 7, isCompleted: true, priority: 'low' },
-	{ id: 4, title: 'Meditate', streak: 2, isCompleted: false, priority: 'high' },
-	{ id: 5, title: 'Write Journal', streak: 4, isCompleted: true, priority: 'medium' },
-	{ id: 6, title: 'Practice Guitar', streak: 6, isCompleted: false, priority: 'low' },
-	{ id: 7, title: 'Cook Healthy Meal', streak: 8, isCompleted: true, priority: 'high' },
-	{ id: 8, title: 'Study Spanish', streak: 1, isCompleted: false, priority: 'medium' },
-	{ id: 9, title: 'Clean Desk', streak: 3, isCompleted: true, priority: 'low' },
-	{ id: 10, title: 'Plan Tomorrow', streak: 5, isCompleted: false, priority: 'high' },
-]
+// const INITIAL_HABITS: Habit[] = [
+// 	{ id: 1, title: 'Drink Water', streak: 5, isCompleted: true, priority: 'high' },
+// 	{ id: 2, title: 'Morning Jog', streak: 3, isCompleted: false, priority: 'medium' },
+// 	{ id: 3, title: 'Read a Book', streak: 7, isCompleted: true, priority: 'low' },
+// 	{ id: 4, title: 'Meditate', streak: 2, isCompleted: false, priority: 'high' },
+// 	{ id: 5, title: 'Write Journal', streak: 4, isCompleted: true, priority: 'medium' },
+// 	{ id: 6, title: 'Practice Guitar', streak: 6, isCompleted: false, priority: 'low' },
+// 	{ id: 7, title: 'Cook Healthy Meal', streak: 8, isCompleted: true, priority: 'high' },
+// 	{ id: 8, title: 'Study Spanish', streak: 1, isCompleted: false, priority: 'medium' },
+// 	{ id: 9, title: 'Clean Desk', streak: 3, isCompleted: true, priority: 'low' },
+// 	{ id: 10, title: 'Plan Tomorrow', streak: 5, isCompleted: false, priority: 'high' },
+// ]
 
 export default function HomeScreen() {
 
@@ -39,49 +43,42 @@ export default function HomeScreen() {
 	const onPrimary = useThemeColor({}, 'onPrimary')
 	const text = useThemeColor({}, 'text')
 	const muted = useThemeColor({}, 'muted')
+	const danger = useThemeColor({}, 'danger')
 	const insets = useSafeAreaInsets()
 
-	const [habits, setHabits] = useState<Habit[]>([])
 	const [newHabit, setNewHabit] = useState<string>('')
+	const { addHabit, habits, loading, toggleHabit } = useHabits()
 
-	const toggle = useCallback((id: number) => {
-		setHabits(prev => prev.map(habit => {
-			if(habit.id !== id)
-				return habit
-			
-			return {
-				...habit,
-				isCompleted: !habit.isCompleted,
-				streak: !habit.isCompleted ? habit.streak + 1 : Math.max(0, habit.streak)
-			}
-		}))
-	}, [])
-
-	const addHabit = useCallback(() => {
+	const onAddHabit = useCallback(() => {
 		const title = newHabit.trim()
 
-		if(!title)
-			return
+		if(!title) return
 
-		setHabits(prev => [{ id: habits.length + 1, title, streak: 0, isCompleted: false, priority: 'low' }, ...prev])
-	}, [newHabit])
+		addHabit(newHabit)
+		setNewHabit('')
+	}, [newHabit, addHabit])
 
 	const total = habits.length
 	const totalCompleted = useMemo(() => habits.filter(habit => habit.isCompleted).length , [habits])
 
 	const name = 'Juan Gómez'
-	
-	const keyExtractor = useCallback((item: Habit) => item.id.toString(), [])
-	const renderItem = useCallback(({ item }: ListRenderItemInfo<Habit>) => (
-		<HabitCart 
-			key={item.id} 
-			title={item.title} 
-			streak={item.streak} 
-			isCompleted={item.isCompleted}
-			priority={item.priority}
-			onToggle={ () => toggle(item.id) }
-		/>
-	), [toggle])
+
+	const renderItem = useCallback(({ item }: ListRenderItemInfo<Habit>) => {
+		const isToday = item.lastDoneAlt 
+			? new Date(item.lastDoneAlt).toDateString() === new Date().toDateString() 
+			: false
+
+		return (
+			<HabitCart 
+				key={item.id} 
+				title={item.title} 
+				streak={item.streak} 
+				isCompleted={item.isCompleted}
+				priority={item.priority}
+				onToggle={ () => toggleHabit(item.id) }
+			/>
+		)
+	}, [toggleHabit])
 
 	const ItemSparator = () => <View style={{ height: 12 }}></View>
 	const Empty = () => (
@@ -92,6 +89,26 @@ export default function HomeScreen() {
 		</View>
 	)
 
+	const onClearHandler = useCallback(() => {
+		(async() => {
+			try {
+				await AsyncStorage.clear()
+				Alert.alert('Clean up', 'Your habits have been deleted')
+			} catch (error) {
+				Alert.alert('Error', 'Something was wrong!')
+				console.warn(error)
+			}
+		})()
+	}, [])
+
+	if(loading) {
+		return(
+			<Screen>
+				<ThemedText>{ `Loading your habits...` }</ThemedText>
+			</Screen>
+		)
+	}
+
   return (
 		<Screen>
 			<ProfileHeader name={name} role="Dev" />
@@ -101,6 +118,7 @@ export default function HomeScreen() {
 					value={ newHabit } 
 					onChangeText={ setNewHabit } 
 					placeholder='New habit (ex: Do exercise)'
+					onSubmitEditing={ onAddHabit }
 					style={[ 
 						styles.input, { 
 							backgroundColor: surface,
@@ -110,16 +128,22 @@ export default function HomeScreen() {
 					]}
 				/>
 				<PrimaryButton
-					onPress={addHabit}
+					onPress={ onAddHabit }
 					title='Add'
 					style={[ 
 						styles.addButton, { backgroundColor: primary }]}
 				>
 				</PrimaryButton>
+				<PrimaryButton
+					onPress={ onClearHandler }
+					title='Clear'
+					style={[ 
+						styles.addButton, { backgroundColor: danger }]}
+				>
+				</PrimaryButton>
 			</View>
 			<FlatList
 				data={ habits }
-				keyExtractor={ keyExtractor }
 				renderItem={ renderItem }
 				ItemSeparatorComponent={ ItemSparator }
 				ListEmptyComponent={ Empty }
