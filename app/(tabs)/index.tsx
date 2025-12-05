@@ -1,39 +1,21 @@
+import { Alert } from 'react-native';
 import { useCallback, useMemo, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FlatList, ListRenderItemInfo, StyleSheet, TextInput, View } from 'react-native';
 
+import { Habit } from '@/types/habits';
 import { Screen } from '@/components/Screen';
 import { HabitCart } from '@/components/HabitCard';
+import { useHabits } from '@/context/HabitsContext';
 import { ThemedText } from '@/components/themed-text';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { HabitGreeting } from '@/components/HabitGreeting';
 import { ProfileHeader } from '@/components/ProfileHeader';
 import { PrimaryButton } from '@/components/PrimaryButton';
-import { useHabits } from '@/context/HabitsContext';
-import { Habit } from '@/types/habits';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Alert } from 'react-native';
-
-// interface Habit {
-//  id: number; 
-//  title: string; 
-//  streak: number; 
-//  isCompleted: boolean; 
-//  priority?: 'low' | 'medium' | 'high'
-// }
-
-// const INITIAL_HABITS: Habit[] = [
-// 	{ id: 1, title: 'Drink Water', streak: 5, isCompleted: true, priority: 'high' },
-// 	{ id: 2, title: 'Morning Jog', streak: 3, isCompleted: false, priority: 'medium' },
-// 	{ id: 3, title: 'Read a Book', streak: 7, isCompleted: true, priority: 'low' },
-// 	{ id: 4, title: 'Meditate', streak: 2, isCompleted: false, priority: 'high' },
-// 	{ id: 5, title: 'Write Journal', streak: 4, isCompleted: true, priority: 'medium' },
-// 	{ id: 6, title: 'Practice Guitar', streak: 6, isCompleted: false, priority: 'low' },
-// 	{ id: 7, title: 'Cook Healthy Meal', streak: 8, isCompleted: true, priority: 'high' },
-// 	{ id: 8, title: 'Study Spanish', streak: 1, isCompleted: false, priority: 'medium' },
-// 	{ id: 9, title: 'Clean Desk', streak: 3, isCompleted: true, priority: 'low' },
-// 	{ id: 10, title: 'Plan Tomorrow', streak: 5, isCompleted: false, priority: 'high' },
-// ]
+import { useCelebration } from '@/context/CelebrationProvider';
+import { isSameDay } from '@/utils/date';
+import { getMotivation } from '@/services/motivation';
 
 export default function HomeScreen() {
 
@@ -48,6 +30,7 @@ export default function HomeScreen() {
 
 	const [newHabit, setNewHabit] = useState<string>('')
 	const { addHabit, habits, loading, toggleHabit } = useHabits()
+	const { celebrate } = useCelebration()
 
 	const onAddHabit = useCallback(() => {
 		const title = newHabit.trim()
@@ -70,15 +53,15 @@ export default function HomeScreen() {
 
 		return (
 			<HabitCart 
-				key={item.id} 
-				title={item.title} 
-				streak={item.streak} 
-				isCompleted={item.isCompleted}
-				priority={item.priority}
-				onToggle={ () => toggleHabit(item.id) }
+				key={ item.id } 
+				title={ item.title } 
+				streak={ item.streak } 
+				isCompleted={ isToday }
+				priority={ item.priority }
+				onToggle={ () => onToggleWithCelebration(item) }
 			/>
 		)
-	}, [toggleHabit])
+	}, [])
 
 	const ItemSparator = () => <View style={{ height: 12 }}></View>
 	const Empty = () => (
@@ -100,6 +83,18 @@ export default function HomeScreen() {
 			}
 		})()
 	}, [])
+
+	const onToggleWithCelebration = async (habit: Habit) => {
+		const wasToday = habit.lastDoneAlt 
+			? isSameDay(new Date(habit.lastDoneAlt), new Date()) : false
+
+		toggleHabit(habit.id)
+
+		if(!wasToday) {
+			const message = await getMotivation('Juan', habit.title)
+			celebrate(message)
+		}
+	}
 
 	if(loading) {
 		return(

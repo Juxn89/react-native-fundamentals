@@ -1,13 +1,13 @@
-import { useState } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 
 import { Screen } from '@/components/Screen';
 import { ThemedText } from '@/components/themed-text';
 import { QuickAddChips } from '@/components/QuickAddChips';
+import { useHabits } from '@/context/HabitsContext';
 
 export default function TabTwoScreen() {
-	const [habitsPicked, setHabitsPicked] = useState<string[]>([])
-	const onPick = (habit: string) => setHabitsPicked(prev => (prev.includes(habit)) ? prev : [habit, ...prev] )
+	const { addHabit } = useHabits()
+	const onPick = (habit: string) => addHabit(habit, 'low')
 	
   return (
 		<Screen>
@@ -16,13 +16,6 @@ export default function TabTwoScreen() {
 					Quick suggestions
 				</ThemedText>
 				<QuickAddChips onPick={ onPick } />
-				<ThemedText>Your choices</ThemedText>
-				<FlatList
-					data={habitsPicked}
-					keyExtractor={ habit => habit }
-					renderItem={ ({item}) => <ThemedText>{ item }</ThemedText> }
-					ListEmptyComponent={ <ThemedText>Select a habit from the suggested list</ThemedText> }
-				/>
 			</View>
 		</Screen>
   );

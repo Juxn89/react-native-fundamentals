@@ -1,10 +1,11 @@
 import 'react-native-reanimated';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
 import { HabitsProvider } from '@/context/HabitsContext';
+import { useColorScheme } from '@/hooks/use-color-scheme';
+import { CelebrationProvider } from '@/context/CelebrationProvider';
+import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 
 export const unstable_settings = {
   anchor: '(tabs)',
@@ -16,11 +17,13 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
 			<HabitsProvider>
-				<Stack>
-					<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-					<Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-				</Stack>
-				<StatusBar style="auto" />				
+				<CelebrationProvider>
+					<Stack>
+						<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+						<Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
+						<StatusBar style="auto" />
+					</Stack>					
+				</CelebrationProvider>
 			</HabitsProvider>
     </ThemeProvider>
   );
