@@ -1,50 +1,63 @@
-# Welcome to your Expo app 👋
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+<h1 align="left">Habits • React Native Fundamentals</h1>
 
-## Get started
+[![Expo](https://img.shields.io/badge/Expo-managed-4CAF50?logo=expo)](https://expo.dev) [![React Native](https://img.shields.io/badge/React%20Native-stable-61DAFB?logo=react)](https://reactnative.dev) [![TypeScript](https://img.shields.io/badge/TypeScript-typed-3178C6?logo=typescript)](https://www.typescriptlang.org) [![Node.js](https://img.shields.io/badge/Node.js-runtime-339933?logo=node.js)](https://nodejs.org) 
 
-1. Install dependencies
+<p style="color:#6b7280; margin-top: -10px;">A minimal, opinionated Habits app built with Expo, showcasing practical patterns for mobile development with React Native & TypeScript. ✨</p>
 
-   ```bash
-   npm install
-   ```
+<h2>Quick start</h2>
 
-2. Start the app
+<pre><code>npm install
+npx expo start</code></pre>
 
-   ```bash
-   npx expo start
-   ```
+<h2>What this repo is</h2>
 
-In the output, you'll find options to open the app in a
+This repository is a compact learning workspace built with Expo and TypeScript that demonstrates practical patterns for mobile apps:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- File-based routing (app directory)
+- Small reusable UI components
+- Context + hooks for state and theming
+- Simple services and utils for data & date handling
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+<details>
+  <summary>Project structure (click to expand)</summary>
 
-## Get a fresh project
+- `app/` — Routes, screens, and layout (Expo Router)
+- `components/` — Reusable UI pieces (Avatar, Buttons, Cards)
+- `context/` — Providers for profile, habits, and celebration
+- `hooks/` — Platform-aware helpers (color scheme, themes)
+- `services/` — Small modules (avatar, motivation, suggestions)
+- `utils/` & `data/` — helpers and sample data
+- `assets/` — images and static files
 
-When you're ready, run:
+</details>
 
-```bash
-npm run reset-project
-```
+<h2>Technologies & notable topics</h2>
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+- **Expo** — Managed app workflow for development and builds
+- **React & React Native** — UI and navigation primitives
+- **TypeScript** — types for components and hooks
+- **Expo Router (file-based routing)** — organizing screens via `app/`
+- **Context + Hooks** — lightweight state management patterns
 
-## Learn more
+<h2>Useful links</h2>
 
-To learn more about developing your project with Expo, look at the following resources:
+- Expo docs — Official documentation and guides: https://expo.dev
+- Expo Router — File-based routing for Expo: https://expo.github.io/router/docs
+- React Native docs — Core primitives and APIs: https://reactnative.dev
+- TypeScript — Types for safer apps: https://www.typescriptlang.org
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Each link points to official docs and will help extend or debug features shown in this repo.
 
-## Join the community
+<h2>Commands</h2>
 
-Join our community of developers creating universal apps.
+- Install: <code>npm install</code>
+- Start dev server: <code>npx expo start</code>
+- Reset starter (moves starter code to <code>app-example</code>): <code>npm run reset-project</code>
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+<h2>Contributing</h2>
+
+This repo is intended as a learning reference. Feel free to open issues or PRs for fixes or small improvements.
+
+<p align="center">Made with ❤️ ☕️ from <img src="https://flagcdn.com/w20/ni.png" alt="Nicaragua" style="vertical-align:middle; display:inline; margin:0 6px;"/> , Juan Gómez</p>
+

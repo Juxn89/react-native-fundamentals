@@ -1,0 +1,4 @@
+- https://www.privacypolicies.com/blog/mobile-apps-privacy-policy/
+- https://www.app-privacy-policy.com/
+- https://termify.io/
+- https://play.google.com/console/signup
