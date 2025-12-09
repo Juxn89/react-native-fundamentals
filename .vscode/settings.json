@@ -1,6 +1,7 @@
 {
 	"explorer.autoReveal": true,
 	"explorer.compactFolders": false,
+	"editor.cursorBlinking": "expand",
   "editor.codeActionsOnSave": {
     "source.fixAll": "explicit",
     "source.organizeImports": "explicit",
