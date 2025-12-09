@@ -3,6 +3,7 @@ import { Pressable, ScrollView, StyleSheet } from "react-native"
 
 import { useThemeColor } from "@/hooks/use-theme-color"
 import { ThemedText } from "./themed-text"
+import { Suggestion } from "@/services/suggest"
 
 const SUGGESTED_HABITS: string[] = [
 	'Drink water',
@@ -13,7 +14,7 @@ const SUGGESTED_HABITS: string[] = [
 ]
 
 interface Props {
-	onPick: (title: string) => void
+	onPick: (title: Suggestion) => void
 }
 
 export const QuickAddChips = ({ onPick }: Props) => {
