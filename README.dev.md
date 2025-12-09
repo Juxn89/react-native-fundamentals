@@ -2,3 +2,4 @@
 - https://www.app-privacy-policy.com/
 - https://termify.io/
 - https://play.google.com/console/signup
+- https://www.appicon.co/
